@@ -55,7 +55,10 @@ class TextProcess:
     def get_embedding(self):
         self.token_index = dict(sorted(self.token_index.items(), key=lambda x: x[1]))
 
+        # lambda get token embedding
         lambda_token_embedding  = lambda token: self.glove_vectors[token]
         token_embedding = map(lambda_token_embedding, list(self.token_index.keys()))
+
+        # embedding matrix
         pre_trained_embedding = np.array([embedding_tensor.numpy() for embedding_tensor in token_embedding])
         return pre_trained_embedding
