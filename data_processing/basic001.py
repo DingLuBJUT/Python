@@ -3,6 +3,49 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from itertools import chain,repeat,islice
 from torchnlp.word_to_vector import GloVe
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
+
+
+"""
+Bag Of Word(BOW)
+"""
+
+sentence = ["I love to eat Burgers",
+            "I love to eat Fries"]
+
+# min_df 单词最少出现行数
+# max_df 单词最多出现行数比例
+# CountVectorizer自动进行分词、排除停用词、排除编码异常词汇
+vectorizer = CountVectorizer(min_df=1, max_df=0.95)
+sentence_vector = vectorizer.fit_transform(sentence)
+
+lemm = WordNetLemmatizer()
+# 重载CountVectorizer-添加Lemmatizer功能
+class LemmaCountVectorizer(CountVectorizer):
+    def build_analyzer(self):
+        analyzer = super(LemmaCountVectorizer, self).build_analyzer()
+        return lambda doc: (lemm.lemmatize(w) for w in analyzer(doc))
+
+"""
+TD-IDF
+"""
+# 类比CountVectorizer
+vectorizer = TfidfTransformer(min_df=1, max_df=0.95)
+sentence_vector = vectorizer.fit_transform(sentence)
+
+# 类比CountVectorizer
+class LemmaTfidfTransformer(TfidfTransformer):
+    def build_analyzer(self):
+        analyzer = super(LemmaTfidfTransformer, self).build_analyzer()
+        return lambda doc: (lemm.lemmatize(w) for w in analyzer(doc))
+
+
+
+
+
+
+
 
 class TextProcess:
     """
