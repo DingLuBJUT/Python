@@ -8,6 +8,8 @@ from bubbly.bubbly import bubbleplot
 from sklearn.datasets import load_iris
 from pandas.plotting import andrews_curves
 
+from wordcloud import WordCloud, STOPWORDS
+
 
 def load_data():
     iris = load_iris()
@@ -97,4 +99,23 @@ def HeatMap():
     # 特征间相关系数热力图
     data = load_data()
     sns.heatmap(data.drop("Id", axis=1).corr(),annot=True)
+    return
+
+def WordCloud(text_list):
+    # 词云
+    """
+    text_list = [
+        "It never once occurred to me that the fumbling might be a mere mistake."
+        "Herbert West needed fresh bodies because his life work was the reanimation of the dead."
+    ]
+    """
+    plt.figure(figsize=(16,13))
+    wc = WordCloud(background_color="black",
+                   max_words=10000,
+                   stopwords=STOPWORDS,
+                   max_font_size= 40)
+    wc.generate(" ".join(text_list))
+    plt.title("word cloud", fontsize=20)
+    plt.imshow(wc.recolor(colormap= 'Pastel2' , random_state=17), alpha=0.98)
+    plt.axis('off')
     return
